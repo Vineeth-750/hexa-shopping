@@ -1,0 +1,128 @@
+{% extends 'nav.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  /* General Table Styling */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 30px 0;
+  }
+
+  /* Table Heading Styling */
+  .premium-heading {
+    background-color: #2d3436; /* Dark background for header */
+    color: #fff; /* White text for the header */
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 12px 16px;
+    border-radius: 8px 8px 0 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  }
+
+  /* Table Body Styling */
+  tbody tr {
+    background-color: #ecf0f1; /* Light gray background for rows */
+    color: #2c3e50; /* Dark text color for readability */
+    font-size: 16px;
+    text-align: center;
+    padding: 12px;
+    border-bottom: 1px solid #ccc; /* Light border between rows */
+  }
+
+  /* Hover Effect for Table Rows */
+  tbody tr:hover {
+    background-color: #f39c12; /* Bright yellow hover effect */
+     /* White text when hovered */
+    cursor: pointer; /* Change cursor to indicate interactivity */
+  }
+
+  /* Alternating Row Colors */
+  tbody tr:nth-child(even) {
+    background-color: #bdc3c7; /* Slightly darker gray for alternating rows */
+  }
+
+  /* Table Data Cell Styling */
+  td {
+    padding: 12px 16px;
+    border-right: 1px solid #ccc; /* Right border for separation */
+  }
+
+  td:last-child {
+    border-right: none; /* Remove the right border on the last column */
+  }
+
+  /* Add a subtle hover effect on table headers */
+  .premium-heading th:hover {
+    background-color: rgb(207, 206, 206)
+    ; /* Bright hover effect */
+    color: #100e0e;
+    cursor: pointer;
+  }
+
+  /* Link Styling inside the table */
+  a {
+    color: #3498db; /* Blue color for links */
+    text-decoration: none; /* Remove underline */
+  }
+
+  a:hover {
+    text-decoration: underline; /* Add underline on hover */
+    color: #e67e22; /* Orange color for links on hover */
+  }
+
+  /* Table Container */
+  .container-fluid {
+    padding: 0 20px;
+  }
+
+</style>
+
+
+
+<div class="page-heading" id="top">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="inner-content">
+          <h2>Check Our Products</h2>
+          <span>Awesome &amp; Creative HTML CSS layout by TemplateMo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Table with Premium Background for Heading -->
+<table class="table table-striped">
+  <thead class="premium-heading">
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Product</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Date</th>
+      <th scope="col">Amount</th>
+      <th scope="col">Status</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for orders in order %}
+    <tr>
+      <td scope="row">{{ orders.id }}</td>
+      <td><a href="{% url 'single_product' orders.product.id %}">
+          {{ orders.product.productname }}</a></td>
+      <td>{{ orders.quantity }}</td>
+      <td>{{ orders.order.date_placed }}</td>
+      <td>{{ orders.total_price }}</td>
+      <td>{{ orders.order.status }}</td>
+      <td></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock content %}

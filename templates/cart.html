@@ -1,0 +1,261 @@
+{% extends 'nav.html' %}
+{% load static %}
+{% block head %}
+<style>
+  .overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+
+  .billing-modal-container {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+  }
+
+  .billing-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .billing-modal-header .close-btn {
+    cursor: pointer;
+    font-size: 24px;
+    color: #333;
+  }
+
+  .billing-modal-content label {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  .billing-modal-content input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .billing-modal-content .inline-fields {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .billing-modal-content .inline-fields div {
+    flex: 1;
+  }
+
+  /* New styles to make phone and email inline */
+  .inline-phone-email {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .inline-phone-email div {
+    flex: 1;
+  }
+
+  .billing-modal-buttons {
+    text-align: right;
+  }
+
+  .billing-modal-buttons button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .billing-modal-buttons .submit-btn {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .billing-modal-buttons .cancel-btn {
+    background-color: #f44336;
+    color: white;
+  }
+</style>
+{% endblock head %}
+
+{% block content %}
+<div class="page-heading" id="top">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="inner-content">
+          <h2>Check Our Products</h2>
+          <span>Awesome &amp; Creative HTML CSS layout by TemplateMo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <table class="table header-sticky">
+    <thead class="bg-dark text-white" style="height: 50px;">
+      <tr>
+        <th>#</th>
+        <th>Product</th>
+        <th>Details</th>
+        <th>Quantity</th>
+        <th>Amount</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in cart_items %}
+      <tr>
+        <th scope="row">{{ x.id }}</th>
+        <td>
+          <img src="{{ x.product.image.url }}" style="height: 70px; width: 70px;">
+        </td>
+        <td>
+          {{ x.product.productname }}<br>
+          {{ x.product.description }}<br>
+          {{ x.product.price }}
+        </td>
+        <td>{{ x.quantity }}</td>
+        <td>{{ x.amount }}</td>
+        <td>
+          <!-- Form to buy the single item -->
+          <form method="POST" action="{% url 'buy_single' x.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="address" value="Pre-filled Address (if any)">
+            <button type="submit" class="buy-btn">Buy</button>
+        </form>
+          
+
+          <!-- Button to remove the item from the cart -->
+          <button class="rounded-pill bg-dark" style="height:40px;width:100px;">
+            <a href="{% url 'cart_delete' x.id %}" style="color: white; text-decoration: none;"><i class="bi bi-trash3"></i>Remove</a>
+          </button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div style="width:100%; height: 70px; background-color: #333; padding: 50px; color: #fff;">
+  <div style="display: flex; align-items: center; gap: 10px;">
+    <h2>Total: ${{ total_amount }}</h2>
+    <!-- Form to buy all items -->
+    <form method="POST" action="{% url 'buy_all' %}">
+      {% csrf_token %}
+      <input type="hidden" name="address" value="Pre-filled Address (if any)">
+      <button type="submit" class="buy-all-btn">Buy All</button>
+  </form>
+  
+  </div>
+</div>
+
+<!-- Billing Modal -->
+<div class="overlay" id="billing-overlay"></div>
+<div class="billing-modal-container" id="billing-modal">
+  <form method="POST" action="">
+    {% csrf_token %}
+    <div class="billing-modal-content">
+      <input type="hidden" id="billing-product-id" name="product_id">
+      <div class="inline-fields">
+        <div>
+          <label for="billing-name">Name:</label>
+          <input type="text" id="billing-name" name="name" readonly>
+        </div>
+        <div>
+          <label for="billing-product">Product:</label>
+          <input type="text" id="billing-product"  name="product">
+        </div>
+      </div>
+      <div class="inline-fields">
+        <div>
+          <label for="billing-quantity">Quantity:</label>
+          <input type="number" id="billing-quantity" name="quantity" readonly>
+        </div>
+        <div>
+          <label for="billing-price">Product Price:</label>
+          <input type="text" id="billing-price"  name="price" readonly>
+        </div>
+      </div>
+      <label for="billing-amount">Total Amount:</label>
+      <input type="text" id="billing-amount"  name="amount" readonly>
+
+      <label for="billing-address">Address:</label>
+      <input type="text" id="billing-address" name="address">
+
+      <!-- Phone and Email fields in line -->
+      <div class="inline-phone-email">
+        <div>
+          <label for="billing-phone">Phone:</label>
+          <input type="text" id="billing-phone" name="phone">
+        </div>
+        <div>
+          <label for="billing-email">Email:</label>
+          <input type="email" id="billing-email" name="email">
+        </div>
+      </div>
+    </div>
+    <div class="billing-modal-buttons">
+      <button type="button" class="cancel-btn" onclick="closeBillingModal()">Cancel</button>
+      <button type="submit" class="submit-btn">Submit</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Modal trigger event
+  document.querySelectorAll('.billing-trigger').forEach((button) => {
+    button.addEventListener('click', function() {
+      // Set values in the form
+      document.getElementById('billing-name').value = button.getAttribute('data-customer-name');
+      document.getElementById('billing-product').value = button.getAttribute('data-product-name');
+      document.getElementById('billing-quantity').value = button.getAttribute('data-quantity');
+      document.getElementById('billing-price').value = button.getAttribute('data-price');
+      document.getElementById('billing-amount').value = button.getAttribute('data-amount');
+      document.getElementById('billing-address').value = button.getAttribute('data-address');
+      document.getElementById('billing-phone').value = button.getAttribute('data-phone');
+      document.getElementById('billing-email').value = button.getAttribute('data-email');
+
+      // Set the product_id in the hidden input field
+      document.getElementById('billing-product-id').value = button.getAttribute('data-product-id');
+
+      // Show the modal
+      document.getElementById('billing-modal').style.display = 'block';
+      document.getElementById('billing-overlay').style.display = 'block';
+    });
+  });
+
+  // Function to close the modal
+  function closeBillingModal() {
+    document.getElementById('billing-modal').style.display = 'none';
+    document.getElementById('billing-overlay').style.display = 'none';
+  }
+
+  // Close the modal when the overlay is clicked
+  document.getElementById('billing-overlay').addEventListener('click', closeBillingModal);
+</script>
+
+{% endblock content %}

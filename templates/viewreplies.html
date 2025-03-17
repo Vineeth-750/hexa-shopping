@@ -1,0 +1,199 @@
+{% extends 'nav.html' %}
+
+{% block content %}
+<style>
+/* General Styling for View Complaints and Replies Section */
+.view-complaints-replies {
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #fdfcfb, #e8e8e8);
+    border-radius: 15px;
+    box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Section Heading */
+.section-heading h2 {
+    font-size: 3rem;
+    color: #0e0d0f;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 50px;
+    text-transform: capitalize;
+    letter-spacing: 1.5px;
+    text-shadow: 1px 1px 4px rgba(71, 51, 84, 0.4);
+}
+
+/* Table Styles */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.table thead {
+    background: #262328;
+    color: #ffffff;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+}
+
+.table thead th {
+    padding: 20px;
+    text-align: left;
+    border-bottom: 4px solid #4a148c;
+}
+
+.table tbody {
+    font-size: 1rem;
+    color: #333;
+}
+
+.table tbody tr {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.table tbody tr:hover {
+    background-color: #f3e5f5;
+    transform: scale(1.02);
+}
+
+.table tbody td {
+    padding: 20px;
+    vertical-align: top;
+    border-bottom: 1px solid #eee;
+}
+
+/* Replies Section */
+.table tbody ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.table tbody ul li {
+    margin-bottom: 10px;
+    padding: 15px;
+    background: #ede7f6;
+    border-left: 5px solid #2d2233;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    color: #444;
+    transition: all 0.2s ease;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table tbody ul li:hover {
+    background: #d1c4e9;
+    border-left: 5px solid #4a148c;
+    box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.2);
+}
+
+.table tbody ul li strong {
+    display: block;
+    color: #4a148c;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+/* No Replies Message */
+.table tbody p {
+    font-size: 0.9rem;
+    color: #888;
+    font-style: italic;
+    text-align: center;
+    margin: 0;
+}
+
+/* Button Styling */
+button, a.main-dark-button {
+    background: #6a1b9a;
+    color: #ffffff;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+button:hover, a.main-dark-button:hover {
+    background: #4a148c;
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .section-heading h2 {
+        font-size: 2.4rem;
+    }
+
+    .table thead th, .table tbody td {
+        font-size: 0.9rem;
+        padding: 15px;
+    }
+
+    .table tbody ul li {
+        font-size: 0.85rem;
+    }
+}
+
+
+
+</style>
+<br><br><br><br><br><br>
+<!-- ***** View Complaints and Replies Area Starts ***** -->
+<div class="view-complaints-replies">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-heading">
+                    <h2>Your Complaints and Replies</h2>
+                </div>
+                
+                <!-- Table to show complaints and replies -->
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Complaint</th>
+                            <th>Replies</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in complaints_with_replies %}
+                            <tr>
+                                <td>{{ item.complaint.complaint }}</td>
+                                <td>
+                                    {% if item.replies %}
+                                        <ul>
+                                            {% for reply in item.replies %}
+                                                <li>
+                                                    <strong>{{ reply.created_at }}</strong><br>
+                                                    {{ reply.reply }}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        <p>No replies yet.</p>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ***** View Complaints and Replies Area Ends ***** -->
+{% endblock content %}
+

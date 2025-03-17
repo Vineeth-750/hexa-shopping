@@ -1,0 +1,112 @@
+
+{% extends 'nav.html' %}
+{% load static %}
+
+    {% block content %}
+<!-- ***** Product Area Starts ***** -->
+<section class="section" id="product">
+    <div class="container">
+        <div class="row">
+            <!-- Product Images -->
+            <div class="col-lg-8">
+                <div class="left-images">
+                    <img src="{{ singpro.image.url }}" alt="{{ singpro.productname }}" style="height:500px;width:500px;">
+                    
+                </div>
+            </div>
+
+            <!-- Product Details and Quantity -->
+            <div class="col-lg-4">
+                <div class="right-content">
+                    <!-- Product Name and Price -->
+                    <h4>{{ singpro.productname }}</h4>
+                    <span class="price" id="product_price" style="display:none;">{{ singpro.price }}</span>
+
+                    <!-- Rating -->
+                    <ul class="stars">
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                    </ul>
+
+                    <!-- Product Description -->
+                    <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod kon tempor incididunt ut labore.</span>
+
+                    <!-- Product Quote -->
+                    <div class="quote">
+                        <i class="fa fa-quote-left"></i><p>{{ singpro.description }}</p>
+                    </div>
+
+                    <!-- Quantity Selection -->
+                    <div class="quantity-content">
+                        <form method="POST" action="{% url 'single_product' singpro.id %}">
+                            {% csrf_token %}
+                            <div class="left-content">
+                                <h6>No. of Orders</h6>
+                            </div>
+                            <div class="right-content">
+                                <div class="quantity buttons_added">
+                                    <input type="button" value="-" class="minus">
+                                    <input type="number" step="1" min="1" name="quantity" value="1" class="input-text qty text" size="4" id="quantity_input">
+                                    <input type="button" value="+" class="plus">
+                                </div>
+                            </div>
+
+                            <!-- Total Amount Display -->
+                            <div class="total">
+                                <h4>Total :</h4> <h4 id="total_amount" name="total_amount"></h4>
+                                
+                            </div>
+                            <br>
+                            <br>
+                            <button type="submit" class="main-border-button">To Cart</button>
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ***** Product Area Ends ***** -->
+
+<!-- JavaScript to handle Quantity Change and Total Calculation -->
+<script>
+    
+    var quantityInput = document.getElementById("quantity_input");
+    var minusButton = document.querySelector(".minus");
+    var plusButton = document.querySelector(".plus");
+    var totalAmountElement = document.getElementById("total_amount");
+    var productPrice = parseInt(document.getElementById("product_price").innerText); 
+
+    // Function to update the total amount
+    function updateTotalAmount() {
+        var currentQuantity = parseInt(quantityInput.value);
+        var totalAmount = productPrice * currentQuantity;
+        totalAmountElement.innerText = totalAmount + "₹"; 
+    }
+
+    // Decrease quantity when the minus button is clicked
+    minusButton.addEventListener("click", function() {
+        var currentValue = parseInt(quantityInput.value);
+        if (currentValue > 1) {
+            quantityInput.value = currentValue - 1;
+            updateTotalAmount();  // Update the total amount
+        }
+    });
+
+    // Increase quantity when the plus button is clicked
+    plusButton.addEventListener("click", function() {
+        var currentValue = parseInt(quantityInput.value);
+        quantityInput.value = currentValue + 1;
+        updateTotalAmount();  // Update the total amount
+    });
+
+    // Initial total calculation (in case the page is loaded with a pre-defined quantity)
+    updateTotalAmount();
+</script>
+
+    
+    {% endblock content %}

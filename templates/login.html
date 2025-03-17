@@ -1,0 +1,273 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <title>Login Page</title>
+    
+    <style>
+      /* Custom CSS */
+      body, html {
+        height: 100%;
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+      
+      .bg {
+        height: 100%;
+        background: linear-gradient(135deg, #eeecf1 0%, #2575fc 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .custom-login {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        max-width: 450px;
+        width: 90%;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .custom-login::before {
+        content: "";
+        position: absolute;
+        top: -50px;
+        left: -50px;
+        width: 150px;
+        height: 150px;
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        border-radius: 50%;
+        z-index: 0;
+        opacity: 0.8;
+      }
+      
+      .custom-login::after {
+        content: "";
+        position: absolute;
+        bottom: -50px;
+        right: -50px;
+        width: 150px;
+        height: 150px;
+        background: linear-gradient(135deg, #f857a6 0%, #ff5858 100%);
+        border-radius: 50%;
+        z-index: 0;
+        opacity: 0.8;
+      }
+      
+      .frm {
+        position: relative;
+        z-index: 1;
+        padding: 15px;
+        color: #333;
+      }
+      
+      h3 {
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 25px;
+        position: relative;
+      }
+      
+      h3::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(90deg, #6a11cb, #2575fc);
+      }
+      
+      .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 0.9rem;
+      }
+      
+      .form-control {
+        border-radius: 8px;
+        padding: 12px;
+        transition: all 0.3s;
+        border: 1px solid #ddd;
+        background-color: #f8f9fa;
+      }
+      
+      .form-control:focus {
+        box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
+        border-color: #6a11cb;
+      }
+      
+      .form-text {
+        color: #6c757d !important;
+        font-size: 0.75rem;
+      }
+      
+      .btn-primary {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        padding: 12px;
+        transition: all 0.3s;
+        box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+      
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+      }
+      
+      .btn-primary:active {
+        transform: translateY(1px);
+      }
+      
+      .social-login {
+        margin-top: 30px;
+        position: relative;
+      }
+      
+      .social-login::before {
+        content: "or continue with";
+        position: absolute;
+        top: -25px; /* Changed from -15px to -25px to position it higher */
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: white;
+        padding: 0 10px;
+        color: #6c757d;
+        font-size: 0.8rem;
+      }
+      
+      .social-login::after {
+        content: "";
+        position: absolute;
+        top: -5px;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background-color: #ddd;
+        z-index: -1;
+      }
+      
+      .btn-danger {
+        background-color: #ea4335;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+      
+      .btn-facebook {
+        background-color: #3b5998;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+      
+      .create-account {
+        color: #d7d5d8;
+        text-align: center;
+        display: block;
+        margin-top: 20px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+      }
+      
+      .create-account:hover {
+        color: #2575fc;
+      }
+      
+      /* Responsive design */
+      @media (max-width: 480px) {
+        .custom-login {
+          padding: 15px;
+          width: 95%;
+          margin: 0 10px;
+          border-radius: 12px;
+        }
+        
+        .custom-login::before,
+        .custom-login::after {
+          width: 100px;
+          height: 100px;
+        }
+        
+        .social-login {
+          display: none !important;
+        }
+        
+        h3 {
+          font-size: 1.5rem;
+        }
+        
+        .form-control {
+          padding: 10px;
+        }
+        
+        .btn-primary {
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  
+  <body>
+    <div class="bg">
+      <div class="custom-login">
+        <form class="frm" method="POST" action="{% url 'login_page' %}">
+          {% csrf_token %}
+          
+          <h3 class="text-center">Login</h3>
+          
+          <div class="mb-3 mt-4">
+            <label for="exampleInputEmail1" class="form-label">Email address</label>
+            <input type="email" class="form-control" placeholder="Enter your email" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" required>
+            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+          </div>
+          
+          <div class="mb-4">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input type="password" class="form-control" placeholder="Enter your password" id="exampleInputPassword1" name="password" required>
+          </div>
+          
+          <button type="submit" class="btn btn-primary w-100 mt-4">Sign In</button>
+          
+          <!-- Social login buttons - these will be hidden on mobile -->
+          <div class="d-flex justify-content-center gap-3 mt-4 social-login mt-5" >
+            <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-danger">
+              <i class="fab fa-google me-2"></i>
+              Google
+            </a>
+            <a href="{% url 'social:begin' 'facebook' %}" class="btn btn-facebook">
+              <i class="fab fa-facebook-f me-2"></i>
+              Facebook
+            </a>
+          </div>
+          
+          <a href="{% url 'customer_reg' %}" class="create-account">Create new account</a>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Items</title>
+    
+</head>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.order-info {
+    margin-bottom: 20px;
+}
+
+.order-info p {
+    font-size: 16px;
+    color: #555;
+}
+
+.ordersub-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.ordersub-table thead {
+    background-color: #3e0a42;
+    color: #fff;
+}
+
+.ordersub-table th, .ordersub-table td {
+    text-align: left;
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+.ordersub-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.ordersub-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.order-summary {
+    text-align: right;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+</style>
+<body>
+    <div class="container">
+        <h1 class="header">Order Number{{ order.id }}</h1>
+
+        <div class="order-info">
+            <p><strong>Order Date:</strong> {{ order.date_placed }}</p>
+            <p><strong>Customer Name:</strong> {{ order.customer.firstname }}{{ order.customer.lastname }}</p>
+            <p><strong>Delivery Address:</strong> {{ order.address }}</p>
+        </div>
+
+        <table class="ordersub-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price per Unit</th>
+                    <th>Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for x in order_items %}
+                <tr>
+                    <td>{{ x.id }}</td>
+                    <td><a href="{% url 'single_product' x.product.id %}"> {{ x.product.productname }}</a>
+                       </td>
+                    <td>{{ x.quantity }}</td>
+                    <td>₹{{ x.price_per_unit }}</td>
+                    <td>₹{{ x.total_price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="order-summary">
+            <p><strong>Total Order Amount:</strong> ₹{{ total_amount }}</p>
+        </div>
+    </div>
+</body>
+</html>

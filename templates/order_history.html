@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .order-list {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .order-list th, .order-list td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .order-list th {
+            background-color: #3e0a42;
+            color:#fff;
+        }
+        .order-actions a {
+            text-decoration: none;
+            color: #007bff;
+            margin-right: 10px;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #000; /* Green background */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin-left: 90%;
+        }
+
+        .back-button:hover {
+            background-color: #3e0a42; /* Darker green on hover */
+        }
+    </style>
+</head>
+<body>
+    <h1> My Order</h1>
+    <div>
+        <a href="javascript:history.back()" class="back-button">Back</a>
+    </div>
+    <br>
+    <br>
+    <table class="order-list">
+        <thead >
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Order Details</th>
+               
+                <th>Status</th>
+                <th>Total Amount</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.date_placed }}</td>
+            <td><a href="{% url 'order_details' order.id %}" class="btn btn-primary btn-sm">Product Details</a></td>
+            <td>{{ order.status }}</td>
+            <td>₹{{ order.grand_total }}</td>
+            <td>
+                {% if order.status == 'Pending' %}
+                <form method="POST" action="{% url 'order_history' %}" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="order_id" value="{{ order.id }}">
+                    <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                </form>
+                {% elif order.status == 'Confirmed' %}
+                <a href="{% url 'payment_page' order.id %}" class="btn btn-primary btn-sm">Pay Now</a>
+                {% else %}
+                <span>N/A</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    
+</body>
+</html>
